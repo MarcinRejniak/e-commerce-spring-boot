@@ -25,8 +25,13 @@ public class ProductController {
         return productService.getProducts(pageable);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search/getByCategory")
     public Page<Product> getProductsByCategoryId(@RequestParam(name = "categoryId") Long categoryId, Pageable pageable) {
         return productService.getProductsByCategoryId(categoryId, pageable);
+    }
+
+    @GetMapping("/search/getByName")
+    public Page<Product> getProductsByNameContaining(@RequestParam(name = "name") String name, Pageable pageable) {
+        return productService.getProductsByNameContaining(name, pageable);
     }
 }

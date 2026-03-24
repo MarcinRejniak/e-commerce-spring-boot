@@ -26,4 +26,8 @@ public class ProductService {
     public Page<Product> getProductsByCategoryId(Long categoryId, Pageable pageable) {
         return productRepository.findByCategoryId(categoryId, pageable);
     }
+
+    public Page<Product> getProductsByNameContaining(String name, Pageable pageable) {
+        return productRepository.findByNameContaining(name, pageable);
+    }
 }
