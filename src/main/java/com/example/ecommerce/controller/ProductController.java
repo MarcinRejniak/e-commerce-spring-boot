@@ -3,9 +3,9 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.model.Product;
 import com.example.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin("http://localhost:4200")
 @RestController
@@ -21,7 +21,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getProducts() {
-        return productService.getProducts();
+    public Page<Product> getProducts(Pageable pageable) {
+        return productService.getProducts(pageable);
+    }
+
+    @GetMapping("/search")
+    public Page<Product> getProductsByCategoryId(@RequestParam(name = "categoryId") Long categoryId, Pageable pageable) {
+        return productService.getProductsByCategoryId(categoryId, pageable);
     }
 }
