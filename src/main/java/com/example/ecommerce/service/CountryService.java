@@ -18,7 +18,7 @@ public class CountryService {
         return altoalCountryClient.getCountries();
     }
 
-    public StateDto getStates(String country) {
+    public List<StateDto> getStates(String country) {
         return altoalCountryClient.getStates(country);
     }
 }

@@ -1,13 +1,15 @@
 package com.example.ecommerce.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class StateDto {
 
-    private List<String> states;
+    private String name;
 }
