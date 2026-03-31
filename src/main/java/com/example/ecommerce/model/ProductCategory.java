@@ -26,7 +26,6 @@ public class ProductCategory {
     @Column(name = "category_name")
     private String categoryName;
 
-//    ten jsonignore nwm do konca czy jest git
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private Set<Product> products;
