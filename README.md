@@ -43,7 +43,7 @@ Each product features a dedicated detail page where data is fetched asynchronous
 ### 🌍 Dynamic Geographic Data Integration
 A core technical highlight: The application reactively fetches and synchronizes country and state data from external APIs.
 * **Reactive Sync:** Selecting a country automatically triggers a filtered fetch for corresponding states.
-* **Defensive Mapping:** The **Java 25** backend ensures stability by handling polymorphic responses from third-party geographic services.
+* **Defensive Mapping:** The **Java 21** backend ensures stability by handling polymorphic responses from third-party geographic services.
 
 | Country Selection | Dynamic State Loading |
 |---|---|
