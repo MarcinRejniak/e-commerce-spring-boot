@@ -60,8 +60,8 @@ Cart management is powered entirely by **Angular Signals**, eliminating the need
 
 ---
 
-### 🛡️ Defensive Validation & UX
-The checkout flow features an advanced, multi-layered validation system. It provides immediate visual feedback to the user, ensuring data integrity before any request hits the backend.
+### 🛡️ Frontend Validation & UX
+The checkout flow features a robust **Angular-side validation system**. By leveraging **Angular 21's Reactive Forms**, the application provides immediate visual feedback, ensuring a seamless user experience and preventing the submission of incomplete data.
 
 ![Invalid data form](assets/screenshots/img_4.png)
 *Real-time error handling and feedback powered by custom DevStackValidators.*
