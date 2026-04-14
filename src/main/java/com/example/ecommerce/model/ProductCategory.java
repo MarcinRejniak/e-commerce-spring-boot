@@ -19,8 +19,8 @@ import java.util.Set;
 public class ProductCategory {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "category_name")
@@ -28,14 +28,17 @@ public class ProductCategory {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-    private Set<Product> products;
+    private Set<Product> products = new HashSet<>();
 
-    public void addProduct(Product product) {
+    public void add(Product product) {
 
-        if (products == null) {
-            products = new HashSet<>();
+        if (product != null) {
+            if (products == null) {
+                products = new HashSet<>();
+            }
+
+            products.add(product);
+            product.setCategory(this);
         }
-
-        products.add(product);
     }
 }
