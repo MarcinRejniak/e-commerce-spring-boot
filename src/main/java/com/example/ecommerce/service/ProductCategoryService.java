@@ -1,5 +1,7 @@
 package com.example.ecommerce.service;
 
+import com.example.ecommerce.dto.ProductCategoryDto;
+import com.example.ecommerce.mapper.ProductCategoryMapper;
 import com.example.ecommerce.repository.ProductCategoryRepository;
 import com.example.ecommerce.model.ProductCategory;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,13 +15,18 @@ import java.util.List;
 public class ProductCategoryService {
 
     private final ProductCategoryRepository productCategoryRepository;
+    private final ProductCategoryMapper productCategoryMapper;
 
-    public ProductCategory getProductCategory(Long id) {
-        return productCategoryRepository.findById(id).orElseThrow(() ->
+    public ProductCategoryDto getProductCategory(Long id) {
+        ProductCategory productCategory = productCategoryRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Product category  not found, id: [%s]".formatted(id)));
+
+        return productCategoryMapper.map(productCategory);
     }
 
-    public List<ProductCategory> getProductCategories() {
-        return productCategoryRepository.findAll();
+    public List<ProductCategoryDto> getProductCategories() {
+        List<ProductCategory> productCategories = productCategoryRepository.findAll();
+
+        return productCategories.stream().map(productCategoryMapper::map).toList();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ecommerce.service;
 
+import com.example.ecommerce.dto.ProductCategoryDto;
 import com.example.ecommerce.model.ProductCategory;
 import com.example.ecommerce.repository.ProductCategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,11 +35,11 @@ class ProductCategoryServiceTest {
         given(productCategoryRepository.findById(productCategoryId)).willReturn(Optional.of(productCategory));
 
 //        when
-        ProductCategory returnedProductCategory = productCategoryService.getProductCategory(productCategoryId);
+        ProductCategoryDto returnedProductCategory = productCategoryService.getProductCategory(productCategoryId);
 
 //        then
         assertThat(returnedProductCategory).isNotNull();
-        assertThat(returnedProductCategory.getId()).isEqualTo(productCategoryId);
+        assertThat(returnedProductCategory.id()).isEqualTo(productCategoryId);
     }
 
     @Test

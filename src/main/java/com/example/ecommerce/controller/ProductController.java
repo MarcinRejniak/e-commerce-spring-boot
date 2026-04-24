@@ -1,6 +1,6 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.model.Product;
+import com.example.ecommerce.dto.ProductDto;
 import com.example.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,22 +16,22 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("{id}")
-    public Product getProduct(@PathVariable Long id) {
+    public ProductDto getProduct(@PathVariable Long id) {
         return productService.getProduct(id);
     }
 
     @GetMapping
-    public Page<Product> getProducts(Pageable pageable) {
+    public Page<ProductDto> getProducts(Pageable pageable) {
         return productService.getProducts(pageable);
     }
 
     @GetMapping("/search/getByCategory")
-    public Page<Product> getProductsByCategoryId(@RequestParam(name = "categoryId") Long categoryId, Pageable pageable) {
+    public Page<ProductDto> getProductsByCategoryId(@RequestParam(name = "categoryId") Long categoryId, Pageable pageable) {
         return productService.getProductsByCategoryId(categoryId, pageable);
     }
 
     @GetMapping("/search/getByName")
-    public Page<Product> getProductsByNameContaining(@RequestParam(name = "name") String name, Pageable pageable) {
+    public Page<ProductDto> getProductsByNameContaining(@RequestParam(name = "name") String name, Pageable pageable) {
         return productService.getProductsByNameContaining(name, pageable);
     }
 }
