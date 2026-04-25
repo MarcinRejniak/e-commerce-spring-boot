@@ -3,30 +3,36 @@ package com.example.ecommerce.webclient.altoal;
 import com.example.ecommerce.dto.CountryDto;
 import com.example.ecommerce.dto.StateDto;
 import com.example.ecommerce.webclient.altoal.dto.country.AltoalCountryDto;
-import com.example.ecommerce.webclient.altoal.dto.countryfulldetails.AltoalCountryFullDetailsDto;
+import com.example.ecommerce.webclient.altoal.dto.countryfulldetails.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClient;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class AltoalCountryClient {
 
-    private static final String BASE_URL = "https://countries.altoal.com/api/v1/";
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestClient restClient;
 
     public List<CountryDto> getCountries() {
-        AltoalCountryDto response = getMethod("metadata.json", AltoalCountryDto.class);
+
+        AltoalCountryDto response = restClient.get()
+                .uri("metadata.json")
+                .retrieve()
+                .body(AltoalCountryDto.class);
+
+        if (response == null || response.getCountries() == null) {
+            return Collections.emptyList();
+        }
 
         return response
                 .getCountries()
                 .entrySet()
                 .stream()
-                .map(entry -> CountryDto
-                        .builder()
+                .map(entry -> CountryDto.builder()
                         .name(entry.getValue().getName())
                         .slug(entry.getKey())
                         .build()
@@ -35,27 +41,27 @@ public class AltoalCountryClient {
     }
 
     public List<StateDto> getStates(String country) {
-        AltoalCountryFullDetailsDto response =
-                getMethod("/name/{country}.json", AltoalCountryFullDetailsDto.class, country);
+        try {
+            AltoalCountryFullDetailsDto response = restClient.get()
+                    .uri("name/{country}.json", country)
+                    .retrieve()
+                    .body(AltoalCountryFullDetailsDto.class);
 
-        if (response == null ||
-                response.getData().getGovernment().getAdministrative_divisions() == null ||
-                response.getData().getGovernment().getAdministrative_divisions().getValue() == null ||
-                response.getData().getGovernment().getAdministrative_divisions().getValue().getDivisions() == null
-        ) {
+            return Optional.ofNullable(response)
+                    .map(AltoalCountryFullDetailsDto::getData)
+                    .map(AltoalCountryDataDto::getGovernment)
+                    .map(AltoalGovernmentDto::getAdministrativeDivisions)
+                    .map(AltoalAdminDivisionsDto::getValue)
+                    .map(AltoalAdminValueDto::getDivisions)
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .map(this::mapToStateDto)
+                    .filter(Objects::nonNull)
+                    .toList();
+        } catch (HttpClientErrorException e) {
             return Collections.emptyList();
         }
 
-        return response
-                .getData()
-                .getGovernment()
-                .getAdministrative_divisions()
-                .getValue()
-                .getDivisions()
-                .stream()
-                .map(this::mapToStateDto)
-                .filter(Objects::nonNull)
-                .toList();
     }
 
     private StateDto mapToStateDto(Object item) {
@@ -66,10 +72,5 @@ public class AltoalCountryClient {
             return StateDto.builder().name(nameVal).build();
         }
         return null;
-    }
-
-    public <T> T getMethod(String url, Class<T> responseType, Object... objects) {
-        return restTemplate.getForObject(BASE_URL + url,
-                responseType, objects);
     }
 }
